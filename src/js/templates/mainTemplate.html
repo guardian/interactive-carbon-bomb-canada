@@ -1,0 +1,156 @@
+
+<div class="audio-container">
+	<audio src="http://visuals.guim.co.uk/2015/05/carbon-bomb-canada/1.mp3" preload="auto" loop class="audio-player" id="audio-full-intro" autoplay></audio>
+	<audio src="http://visuals.guim.co.uk/2015/05/carbon-bomb-canada/2.mp3" preload="none" loop class="audio-player" id="audio-head-1"></audio>
+	<audio src="http://visuals.guim.co.uk/2015/05/carbon-bomb-canada/3.mp3" preload="none" loop class="audio-player" id="audio-head-2"></audio>
+	<audio src="http://visuals.guim.co.uk/2015/05/carbon-bomb-canada/4.mp3" preload="none" loop class="audio-player" id="audio-head-3"></audio>
+</div>
+<div class="story-wrapper">
+	<% if(width > 600) { %>
+		<div class="full top js-fixed" id="full-intro"> 
+			<%= getVideoNew(data.intro[0].video, "top-layer", true, false) %>
+			<div class="int-main">
+				<img src="http://interactive.guim.co.uk/2015/03/climate-change-campaign/assets-1429182577216/imgs/logo_white.png" class="int-top-logo">
+				<div class="social-bar">
+					<div class="change-location">episodes</div>
+					<a class="js-mute faux-link"><i class="mute"></i></a><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent(data.sharing[0]['url']) + '/sfb' %>" class="social-icon-int facebook"><i></i></a><a href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['intro']) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter" target="_blank"><i></i></a>
+				</div>
+				<div class="title-box">
+					<div class="title">
+						<%= data.intro[0].headline %>
+					</div>
+					<div class="subheading">
+						<%= data.intro[0].subheading %>
+					</div>
+				</div>
+				<div class="large-break-scroll"><i></i><div class="text-right">Scroll down to continue</div></div>
+			
+			</div>
+		</div>
+		<div class="int-container">
+			<div class="int-main chapter" id="intro">
+				<div class="text--intro">
+					<h1 class="show-mobile"><%= data['intro'][0].headline %></h1>
+					<div class="text--content first" name="video" data-type="video">
+						<p class="intro-title"><%= data['intro-text'][0].text %></p>
+						<% data['intro-text'].map(function(row) { if(row.type !== "title") { %>
+							<p><%= row.text %></p>
+						<% } }); %>
+					</div>
+				</div>
+			</div>
+		</div>
+	<% } else { %>
+		<% data['mobile-intro'].map(function(row) { %>
+			<% if(row.type === "image") { %>
+				<img class="intro-image--full" src="<%= row.content %>">
+			<% } %>
+
+			<% if(row.type === "text-big") { %>
+				<p class="intro-text intro-text--big"><%= row.content %></p>
+			<% } %>
+
+			<% if(row.type === "text-small") { %>
+				<p class="intro-text intro-text--small"><%= row.content %></p>
+			<% } %>
+
+			<% if(row.type === "text-title") { %>
+				<p class="intro-text intro-text--title"><%= row.content %></p>
+			<% } %>
+
+			<% if(row.type === "text-location") { %>
+				<p class="intro-text intro-text--country"><%= row.content %></p>
+			<% } %>
+		<% }); %>
+	<% } %>
+
+	<% for (i = 1; i < 4; i++) { %>
+		<div class="full" id="head-<%= i %>" data-mobile-alt="bob">
+			<%= getVideoNew(data['break' + i][0].video, "top-layer", false, false) %>
+			<div class="int-main">
+				<div class="social-bar"><div class="change-location">episodes</div><a target="_blank" class="js-mute faux-link"><i class="mute"></i></a><a href="#" class="social-icon-int facebook"><i></i></a><a target="_blank" href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['chapter' + i]) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter"><i></i></a></div>
+				<div class="large-break-container">
+					<div class="large-break-title"><%= data['break' + i][0].description %></div>
+					<div class="large-break"><%= data['break' + i][0].title %></div>
+				</div>
+				<div class="large-break-scroll"><i></i><div class="text-right">Scroll down to continue</div></div>
+				
+			</div>
+		</div>
+		<div class="int-container">
+			<div class="int-main chapter chapter-real" id="chapter-<%= i %>">
+				<div class="social-bar"><div class="change-location">episodes</div><a target="_blank" class="js-mute faux-link"><i class="mute"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u=<%= data.sharing[0]['url'] + '/sfb' %>" class="social-icon-int facebook"><i></i></a><a target="_blank" href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['chapter' + i]) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter"><i></i></a></div>
+				<div class="right-container">
+					<%= getVideoNew(data['chapter' + i][0].anchor, "top-layer", false, true) %>
+				</div>
+				<div class="text">
+					<h1 class="show-mobile"><%= data['break' + i][0].title %></h1>
+					<div class="text--content first" name="<%= data['chapter' + i][0].anchor %>" data-type="video">
+						<% data['chapter' + i].map(function(row) { %>
+							<% if(row.anchor !== "" && row.rowNumber !== 1) { %><a name="<%= row.anchor %>" data-type="video"></a><% } %>
+
+							<% if(row.type === "paragraph") { %>
+								<p><%= row.content %></p>
+							<% } %>
+
+							<% if(row.type === "pullquote") { %>
+								<hr/>
+								<p class="pullquote">
+									<%= row.content %> 
+								</p>
+								<% if(row.meta !== "" && width < 940) { console.log(width); %><p class="pullquote-credit">― <%= row.meta %></p><% } %> 
+							<% } %>
+
+							<% if(row.type === "image") { %>
+								<img src="<%= row.content %>" class="<%= row.meta %>">
+							<% } %>
+
+							<% if(row.altimage !== "" && width < 940) { %>
+								<img src="<%= row.altimage %>">
+								<div class="mobile-image-caption"><%= row.alttext %></div>
+							<% } %>
+						<% }); %>
+					</div>
+				</div>
+			</div>
+		</div>
+	<% } %>
+
+	<div class="full" id="head-4">
+		<%= getVideoNew(data['outro'][0].video, "", false, false) %>
+
+		<div class="int-main">
+			<img src="@@assetPath@@/imgs/bottomlogo.png" class="int-bottom-logo">
+			<div id="show-credits">View credits</div>
+			<div class="social-bar"><div class="change-location">episodes</div><a target="_blank" class="js-mute faux-link"><i class="mute"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u=<%= data.sharing[0]['url'] + '/sfb' %>" class="social-icon-int facebook"><i></i></a><a target="_blank" href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['outro']) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter"><i></i></a></div>
+
+			<div class="column column-2">
+				<p><span class="list-title">Produced and directed by</span><span class="list-name">Lindsay Poulton</span></p>
+				<p><span class="list-title">Written by</span><span class="list-name">Oliver Milman</span></p>
+				<p><span class="list-title">Cinematography</span><span class="list-name">David Maurice Smith</span></p>
+				<p><span class="list-title">Producer</span><span class="list-name">Ekaterina Ochagavia</span></p>
+				<p><span class="list-title">Commissioning editors</span><span class="list-name">John Mullin & James Randerson</span></p>
+				<p><span class="list-title">Music composed by</span><span class="list-name">Graham Hadfield</span>
+			</div>
+			<div class="column column-3">
+				<p><span class="list-title">Interactive development</span><span class="list-name">Josh Holder</span></p>
+				<p><span class="list-title">Interactive design</span><span class="list-name">Monica Ulmanu</span></p>
+				<p><span class="list-title">With special thanks to</span><span class="list-name" style="line-height: 20px; max-width: 356px;">Francesca Panetta, Alex Purcell, Bill Code, Colinda Langburne</span></p>
+				<div id="keepit"><img class="bottom-logo" src="http://interactive.guim.co.uk/2015/03/climate-change-campaign/assets-1429182577216/imgs/logo_white.png">Climate change poses a threat to all of us. Join the Guardian's campaign and help urge the world's two biggest charitable funds to move their money out of fossil fuels</div>
+			</div>
+			<div class="column column-1"><span>Carbon bomb: Australia</span><%= data.intro[0].headline %></div>
+		</div>
+	</div> 
+</div>
+
+<div class="location-dropdown" id="int-dropdown">
+	<% data.series.map(function(row) { %>
+		<a <% if(row.live !== "FALSE") { %> href="<%= row.link %>"<% } %> class="item <% if(row.live === "FALSE") { %> inactive<% } %>">
+			<img src="<%= row.image %>" class="dropdown-image">
+			<div class="country"><%= row.country %></div>
+			<div class="item-title"><%= row.title %></div>
+		</a>
+	<% }); %>
+</div>	
+<span class="right-container right-container--sticky" style="display: none;" id="css"></span>
+<span class="right-container" style="display: none;" id="css-rc"></span>
