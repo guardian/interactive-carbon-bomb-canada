@@ -661,8 +661,9 @@ body {
 
 .int-top-logo {
 	position: absolute;
-	top: 16px;
-	width: 72px;
+	bottom: 16px;
+	right: 10px;
+	width: 65px;
 	opacity: 0;
 	transition: opacity 0.3s ease-in;
 
@@ -1085,7 +1086,7 @@ img {
 	margin-top: 19px;
 }
 
-#head-4 {
+#head-6 {
 	.int-main {
 		color: #fff;
 	}
@@ -1163,7 +1164,7 @@ img {
 	border-radius: 30px;
 	border: 1px solid #fff;
 	font-family: "Guardian Sans Web", "Guardian Agate Sans 1 Web", sans-serif;
-	font-weight: 500;
+	font-weight: 600;
 	width: auto;
 	display: inline-block;
 	position: absolute;
@@ -1186,6 +1187,7 @@ img {
 	float: right;
 	font-family: $sans;
 	font-size: 14px;
+	font-weight: 600;
 	color: #ffbb00;
 	padding-left: 10px;
 	padding-top: 5px;
@@ -1355,4 +1357,67 @@ img {
 	padding-top: 12px;
 	margin-bottom: -12px !important; 
 	font-weight: 600;
+}
+
+// bar
+
+.int-bar-chart {
+	width: 100%;
+	height: 524px;
+	position: relative;
+	margin-bottom: 36px;
+}
+
+.int-bar-chart--top {
+	height: 250px;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.int-bar-chart--bottom {
+	height: 250px;
+	width: 100%;
+	position: absolute;
+	top: 274px;
+	left: 0; 
+
+	.int-bar {
+		background-color: #999 !important;
+		bottom: auto;
+		top: 0;
+	}
+}
+
+.int-line {
+	width: 100%;
+	height: 1px;
+	background-color: #ededed;
+	position: absolute;
+	left: 0;
+}
+
+.int-label {
+	font-family: $sans;
+	font-weight: 400;
+	font-size: 12px;
+	position: absolute;
+	left: 0;
+	background-color: #ffffff;
+	padding-right: 5px; 
+}
+
+.int-bar {
+	border-right: 1px solid white;
+	background-color: #ffbb00;
+	display: block;
+	float: left;
+	position: absolute;
+	bottom: 0;
+	transition: height 1s ease-in;
+
+	.before-animate & {
+		height: 0 !important;
+	}
 }

@@ -96,7 +96,7 @@ define([
 
         dom.videos.intro = $("#full-intro video");
 
-        dom.anchors = {"chapter-1": {}, "chapter-2": {}, "chapter-3": {}};
+        dom.anchors = {"chapter-1": {}, "chapter-2": {}, "chapter-3": {}, "chapter-4": {}, "chapter-5": {}};
 
         $("#chapter-1 a[name]").each(function(i, el) {
             var $el = $(el);
@@ -111,6 +111,16 @@ define([
         $("#chapter-3 a[name]").each(function(i, el) {
             var $el = $(el);
             dom.anchors['chapter-3'][$el.attr("name")] = $el;
+        });
+
+        $("#chapter-4 a[name]").each(function(i, el) {
+            var $el = $(el);
+            dom.anchors['chapter-4'][$el.attr("name")] = $el;
+        });
+
+        $("#chapter-5 a[name]").each(function(i, el) {
+            var $el = $(el);
+            dom.anchors['chapter-5'][$el.attr("name")] = $el;
         });
 
         dom.nav = {"items": {}};
@@ -148,7 +158,7 @@ define([
         dom.intro['right'] = $("#intro .right-container");
         dom.intro['div'] = $("#intro");
 
-        // console.log(dom);
+        console.log(dom);
     }
 
     function whatBrowser() {
@@ -203,9 +213,9 @@ define([
             }
         }
 
-        var chp2Width = $("#chapter-2").width(),
-            chp2RCWidth = $("#chapter-2 .right-container").width(),
-            chp2TWidth = $("#chapter-2 .text").width();
+        var chp2Width = $("#chapter-1").width(),
+            chp2RCWidth = $("#chapter-1 .right-container").width(),
+            chp2TWidth = $("#chapter-1").find(".text").width();
 
         if(!tablet && chp2Width - (chp2RCWidth + chp2TWidth) > 40) {
             $("head").append("<style>.text { width: " + (chp2Width - chp2RCWidth - 60) + "px; }</style>");
@@ -213,9 +223,9 @@ define([
 
         $window.resize(_.debounce(function(){
             if(viewportSize.getWidth() !== windowWidth) {
-                chp2Width = $("#chapter-2").width();
-                chp2RCWidth = $("#chapter-2 .right-container").width();
-                chp2TWidth = $("#chapter-2 .text").width();
+                chp2Width = $("#chapter-1").width();
+                chp2RCWidth = $("#chapter-1 .right-container").width();
+                chp2TWidth = $("#chapter-1 .text").width();
                 // console.log(viewportSize.getWidth(), windowWidth);
                 if((viewportSize.getWidth() > 980 && windowWidth < 980) || (viewportSize.getWidth() < 980 && windowWidth > 980) ) {
                     location.reload();
@@ -368,7 +378,7 @@ define([
 
         _.each(dom.videos.breaks, function($el, key) {
             var $full = $el.closest(".full");
-            if($full.offset().top <= $window.scrollTop() && key !== "head-4") {
+            if($full.offset().top <= $window.scrollTop() && key !== "head-6") {
                 $el.parent(".video-wrapper").css("position", "fixed");
 
                 if($full.offset().top + $full.height() >= $window.scrollTop()) {
@@ -424,6 +434,11 @@ define([
         } else {
             dom.intro['right'].removeClass("right-container--sticky");
             dom.intro['right'].removeClass("right-container--bottom");
+        }
+
+        if(window.scrollY > $("#graph1").offset().top - $window.height() + 500) {
+            console.log('alert');
+            $("#graph1").removeClass("before-animate");
         }
     }
 
@@ -541,16 +556,16 @@ define([
             _.each(dom.audio, function($el, key) {
                 if(currentAudio !== section) {
 
-                    if(currentAudio !== "head-4") {
-                        var toPause = currentAudio;
-                        dom.audio[currentAudio].animate({volume: 0}, 3000, function () {
-                            dom.audio[toPause].get(0).pause();
-                        });
+                    if(currentAudio !== "head-6") {
+                        // var toPause = currentAudio;
+                        // dom.audio[currentAudio].animate({volume: 0}, 3000, function () {
+                        //     dom.audio[toPause].get(0).pause();
+                        // });
                     }
 
-                    if(section !== "head-4") {
-                        dom.audio[section].get(0).play();
-                        dom.audio[section].animate({volume: volumes.audio}, 3000);
+                    if(section !== "head-6") {
+                        // dom.audio[section].get(0).play();
+                        // dom.audio[section].animate({volume: volumes.audio}, 3000);
                     }
 
                     currentAudio = section;
@@ -666,14 +681,14 @@ define([
     function getVideoNew(name, className, autoplay, loop) {
         var mutedTag = (mute) ? " muted " : "",
             classTag =  (className) ? className : "",
-            posterTag = "poster='http://52.17.93.169/interactivevideos/video.php?file=" + name + "&format=video/mp4&maxbitrate=1024&poster=1'",
+            posterTag = "poster='http://multimedia.guardianapis.com/interactivevideos/video.php?file=" + name + "&format=video/mp4&maxbitrate=1024&poster=1'",
             autoplayTag = (autoplay) ? "autoplay" : "",
             loopTag = (loop) ? " loop " : "",
             src = {}; 
-        src.mp4 = "<source src='http://52.17.93.169/interactivevideos/video.php?file=" + name + "&format=video/mp4&maxbitrate=2048' type='video/mp4'>";
+        src.mp4 = "<source src='http://multimedia.guardianapis.com/interactivevideos/video.php?file=" + name + "&format=video/mp4&maxbitrate=2048' type='video/mp4'>";
         // src.ogg = "<source src='http://multimedia.guardianapis.com/interactivevideos/video.php?file=" + name + "&format=video/ogg&maxbitrate=2048' type='video/ogg'>";
-        src.webm = "<source src='http://52.17.93.169/interactivevideos/video.php?file=" + name + "&format=video/webm&maxbitrate=2048' type='video/webm'>";
-        return "<div id='" + name +"' class='video-wrapper " + classTag + "' style='background-image: url(\"http://52.17.93.169/interactivevideos/video.php?file=" + name + "&format=video/mp4&maxbitrate=1024&poster=1\");'><video preload='metadata' " + mutedTag + posterTag + loopTag + autoplayTag + " >" + src.mp4 + src.webm + "</video></div>";
+        src.webm = "<source src='http://multimedia.guardianapis.com/interactivevideos/video.php?file=" + name + "&format=video/webm&maxbitrate=2048' type='video/webm'>";
+        return "<div id='" + name +"' class='video-wrapper " + classTag + "' style='background-image: url(\"http://multimedia.guardianapis.com/interactivevideos/video.php?file=" + name + "&format=video/mp4&maxbitrate=1024&poster=1\");'><video preload='none' " + mutedTag + posterTag + loopTag + autoplayTag + " >" + src.mp4 + src.webm + "</video></div>";
     }
 
     $.scrollLock = ( function scrollLockClosure() {

@@ -64,7 +64,7 @@
 		<% }); %>
 	<% } %>
 
-	<% for (i = 1; i < 4; i++) { %>
+	<% for (i = 1; i < 6; i++) { %>
 		<div class="full" id="head-<%= i %>" data-mobile-alt="bob">
 			<%= getVideoNew(data['break' + i][0].video, "top-layer", false, false) %>
 			<div class="int-main">
@@ -105,6 +105,33 @@
 								<img src="<%= row.content %>" class="<%= row.meta %>">
 							<% } %>
 
+							<% if(row.rowNumber === 3 && i === 1) { %> 
+								<div class="int-bar-chart before-animate" id="graph1">
+									<div class="int-bar-chart--top">
+										<div class="int-line" style="top: 83.3px;"></div>
+										<div class="int-line" style="top: 166.6px;"></div>
+										<div class="int-line" style="top: 250px;"></div>
+										<div class="int-label" style="top: 68px">100</div>
+										<div class="int-label" style="top: 151.5px">50</div>
+										<% for(j = 0; j < data.graph1.length; j++) { %>
+											<div class="int-bar" style="width: <%= (100/(data.graph1.length+1)) %>%; height: <%= data.graph1[j].production*(250/150) %>px; left: <%= (100/(data.graph1.length+1))*(j+1) %>%;"></div>
+										<% } %>
+									</div>
+									<div class="int-bar-chart--bottom">
+										<div class="int-line" style="top: 0px;"></div>
+										<div class="int-line" style="top: 83.3px;"></div>
+										<div class="int-line" style="top: 166.6px;"></div>
+										<div class="int-line" style="top: 250px;"></div>
+										<div class="int-label" style="top: 67.5px">50</div>
+										<div class="int-label" style="top: 152px">100</div>
+										<div class="int-label" style="top: 234.5px">150</div> 
+										<% for(j = 0; j < data.graph1.length; j++) { %>
+											<div class="int-bar" style="width: <%= (100/(data.graph1.length+1)) %>%; height: <%= data.graph1[j].exports*(250/150) %>px; left: <%= (100/(data.graph1.length+1))*(j+1) %>%;"></div>
+										<% } %>
+									</div>
+								</div>
+							<% } %>
+
 							<% if(row.altimage !== "" && width < 940) { %>
 								<img src="<%= row.altimage %>">
 								<div class="mobile-image-caption"><%= row.alttext %></div>
@@ -116,7 +143,7 @@
 		</div>
 	<% } %>
 
-	<div class="full" id="head-4">
+	<div class="full" id="head-6">
 		<%= getVideoNew(data['outro'][0].video, "", false, false) %>
 
 		<div class="int-main">
