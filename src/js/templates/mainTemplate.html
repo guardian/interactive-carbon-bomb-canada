@@ -4,6 +4,8 @@
 	<audio src="http://visuals.guim.co.uk/2015/05/carbon-bomb-canada/2.mp3" preload="none" loop class="audio-player" id="audio-head-1"></audio>
 	<audio src="http://visuals.guim.co.uk/2015/05/carbon-bomb-canada/3.mp3" preload="none" loop class="audio-player" id="audio-head-2"></audio>
 	<audio src="http://visuals.guim.co.uk/2015/05/carbon-bomb-canada/4.mp3" preload="none" loop class="audio-player" id="audio-head-3"></audio>
+	<audio src="http://visuals.guim.co.uk/2015/05/carbon-bomb-canada/5.mp3" preload="none" loop class="audio-player" id="audio-head-4"></audio>
+	<audio src="http://visuals.guim.co.uk/2015/05/carbon-bomb-canada/6.mp3" preload="none" loop class="audio-player" id="audio-head-5"></audio>
 </div>
 <div class="story-wrapper">
 	<% if(width > 600) { %>
@@ -36,7 +38,8 @@
 						<% data['intro-text'].map(function(row) { if(row.type !== "title") { %>
 							<p><%= row.text %></p>
 						<% } }); %>
-					</div>
+					</div> 
+					<img src="http://visuals.guim.co.uk/2015/05/carbon-bomb-canada/alberta-tar-sands.png">
 				</div>
 			</div>
 		</div>
@@ -105,14 +108,21 @@
 								<img src="<%= row.content %>" class="<%= row.meta %>">
 							<% } %>
 
-							<% if(row.rowNumber === 3 && i === 1) { %> 
-								<div class="int-bar-chart before-animate" id="graph1">
+							<% if(row.type === "graph" && row.content === "graph1") { %> 
+								<div class="int-bar-chart <% if(width > 940) { %> before-animate<% } %>" id="graph1">
 									<div class="int-bar-chart--top">
 										<div class="int-line" style="top: 83.3px;"></div>
 										<div class="int-line" style="top: 166.6px;"></div>
 										<div class="int-line" style="top: 250px;"></div>
 										<div class="int-label" style="top: 68px">100</div>
-										<div class="int-label" style="top: 151.5px">50</div>
+										<div class="int-label" style="top: 153.5px">50</div>
+										<div class="int-bar-title" style="top: 12px;">Canadian oil sands production</div>
+										<div class="int-label" style="top: 28.5px; background-color: transparent;">in million cubic metres</div>
+										<div class="int-label" style="top: 248.5px; background-color: transparent; left: 10%;">1970</div>
+										<div class="int-label" style="top: 248.5px; background-color: transparent; left: 30%;">'80</div>
+										<div class="int-label" style="top: 248.5px; background-color: transparent; left: 50%;">'90</div>
+										<div class="int-label" style="top: 248.5px; background-color: transparent; left: 70%;">'00</div>
+										<div class="int-label" style="top: 248.5px; background-color: transparent; left: 90%;">'10</div>
 										<% for(j = 0; j < data.graph1.length; j++) { %>
 											<div class="int-bar" style="width: <%= (100/(data.graph1.length+1)) %>%; height: <%= data.graph1[j].production*(250/150) %>px; left: <%= (100/(data.graph1.length+1))*(j+1) %>%;"></div>
 										<% } %>
@@ -122,9 +132,12 @@
 										<div class="int-line" style="top: 83.3px;"></div>
 										<div class="int-line" style="top: 166.6px;"></div>
 										<div class="int-line" style="top: 250px;"></div>
-										<div class="int-label" style="top: 67.5px">50</div>
-										<div class="int-label" style="top: 152px">100</div>
-										<div class="int-label" style="top: 234.5px">150</div> 
+										<div class="int-label" style="top: 69.5px">50</div>
+										<div class="int-label" style="top: 154px">100</div>
+										<div class="int-label" style="top: 235.5px">150</div> 
+										<div class="int-bar-title" style="top: 185px; z-index: 2;">Exports of crude oil from Canada</div>
+										<div class="int-label" style="top: 201.5px; background-color: transparent;">in million cubic metres</div>
+										<div class="int-label" style="top: 262.5px; background-color: transparent; color: #999; line-height: 14px;">Source: Canadian Association of Petroleum Producers</div>
 										<% for(j = 0; j < data.graph1.length; j++) { %>
 											<div class="int-bar" style="width: <%= (100/(data.graph1.length+1)) %>%; height: <%= data.graph1[j].exports*(250/150) %>px; left: <%= (100/(data.graph1.length+1))*(j+1) %>%;"></div>
 										<% } %>
@@ -147,25 +160,38 @@
 		<%= getVideoNew(data['outro'][0].video, "", false, false) %>
 
 		<div class="int-main">
-			<img src="@@assetPath@@/imgs/bottomlogo.png" class="int-bottom-logo">
+			<a href="http://theguardian.com"><img src="@@assetPath@@/imgs/bottomlogo.png" class="int-bottom-logo"></a>
+<!-- 			<a href="http://www.theguardian.com/environment/ng-interactive/2015/may/15/carbon-bomb-australia-the-new-coal-frontier" id="int-teaser">
+				<hr/>
+				<div class="int-series">Other stories in this series</div>
+				<span class="int-teaser-title">The new coal frontier</span>
+				<div class="int-location">Galilee Basin, Australia</div>
+			</a> -->
+
+			<div class="int-campaign-words">
+				<div class="int-campaign-title">Take action:<br>What you can do to help</div>
+				<div class="int-campaign-sentences">The Guardian has launched a Keep it in the Ground campaign. <a href="http://www.theguardian.com/environment/ng-interactive/2015/mar/16/keep-it-in-the-ground-guardian-climate-change-campaign?INTCMP=keepinground-petition-cb" target="_blank">Sign our petition</a></div>
+				<div class="int-campaign-sentences">Canadians, 350' is organising a <a href="http://350.org/july/" target="_blank">day of action</a></div>
+			</div>
 			<div id="show-credits">View credits</div>
 			<div class="social-bar"><div class="change-location">episodes</div><a target="_blank" class="js-mute faux-link"><i class="mute"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u=<%= data.sharing[0]['url'] + '/sfb' %>" class="social-icon-int facebook"><i></i></a><a target="_blank" href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['outro']) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter"><i></i></a></div>
-
 			<div class="column column-2">
 				<p><span class="list-title">Produced and directed by</span><span class="list-name">Lindsay Poulton</span></p>
-				<p><span class="list-title">Written by</span><span class="list-name">Oliver Milman</span></p>
-				<p><span class="list-title">Cinematography</span><span class="list-name">David Maurice Smith</span></p>
+				<p><span class="list-title">Written by</span><span class="list-name">Suzanne Goldenberg</span></p>
+				<p><span class="list-title">Cinematography</span><span class="list-name">David Levene</span></p>
 				<p><span class="list-title">Producer</span><span class="list-name">Ekaterina Ochagavia</span></p>
 				<p><span class="list-title">Commissioning editors</span><span class="list-name">John Mullin & James Randerson</span></p>
-				<p><span class="list-title">Music composed by</span><span class="list-name">Graham Hadfield</span>
+				<p><span class="list-title">Music composed by</span><span class="list-name">Graham Hadfield</span></p>
+				<p><span class="list-title">Archive courtesy of </span><span class="list-name">Greenpeace</span></p>
 			</div>
 			<div class="column column-3">
 				<p><span class="list-title">Interactive development</span><span class="list-name">Josh Holder</span></p>
 				<p><span class="list-title">Interactive design</span><span class="list-name">Monica Ulmanu</span></p>
-				<p><span class="list-title">With special thanks to</span><span class="list-name" style="line-height: 20px; max-width: 356px;">Francesca Panetta, Alex Purcell, Bill Code, Colinda Langburne</span></p>
-				<div id="keepit"><img class="bottom-logo" src="http://interactive.guim.co.uk/2015/03/climate-change-campaign/assets-1429182577216/imgs/logo_white.png">Climate change poses a threat to all of us. Join the Guardian's campaign and help urge the world's two biggest charitable funds to move their money out of fossil fuels</div>
+				<p><span class="list-title">With special thanks to</span><span class="list-name" style="line-height: 20px; max-width: 356px;">Francesca Panetta, Alex Purcell, Martyn Dore</span></p>
+				<p><span class="list-title">With the kind support of Canon</span><img src="@@assetPath@@/imgs/canon-logo.png" id="canon"></p>
+				<div id="keepit"><a href="http://www.theguardian.com/environment/ng-interactive/2015/mar/16/keep-it-in-the-ground-guardian-climate-change-campaign" target="_blank"><img class="bottom-logo" src="http://interactive.guim.co.uk/2015/03/climate-change-campaign/assets-1429182577216/imgs/logo_white.png"></a>Climate change poses a threat to all of us. <a href="http://www.theguardian.com/environment/ng-interactive/2015/mar/16/keep-it-in-the-ground-guardian-climate-change-campaign" target="_blank">Join the Guardian's campaign</a> and help urge the world's two biggest charitable funds to move their money out of fossil fuels</div>
 			</div>
-			<div class="column column-1"><span>Carbon bomb: Australia</span><%= data.intro[0].headline %></div>
+			<div class="column column-1"><span>Carbon bomb: Canada</span><%= data.intro[0].headline %></div>
 		</div>
 	</div> 
 </div>

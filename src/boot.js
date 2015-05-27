@@ -11,6 +11,7 @@ define([], function() {
 
     return {
         boot: function(el, context, config, mediator) {
+            el.innerHTML = "<p style=\"font-size: 36px; padding-top: 24px; text-align: center;\">Loading...</p>";
             // Load CSS
             addCSS('@@assetPath@@/css/main.css');
 

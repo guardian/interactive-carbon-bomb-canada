@@ -39,7 +39,10 @@ define([
             "videos": 0.6,
             "audio": 0.5,
         },
-        dom = {};
+        dom = {},
+        bandwidth = 750,
+        savedData,
+        loadDate = new Date(); 
 
     function init(el, context, config, mediator) {
         whatBrowser();
@@ -50,27 +53,28 @@ define([
         })
         .done(function(data) {
             data = typeof data === 'string' ? JSON.parse(data) : data;
+            savedData = data;
             whatBrowser();
-            app(data);
-            console.log(data);
+            testBandwidth(app);
         });
     }
 
-    function app(data) {
+    function app() {
+        var data = savedData;
+        console.log('start');
         sheets = data.sheets;
         var mainTemplate = _.template(mainTmpl),
-            mainHTML = mainTemplate({data: data.sheets, getVideo: getVideo, getVideoNew: getVideoNew, width: viewportSize.getWidth()}),
+            mainHTML = mainTemplate({data: data.sheets, getVideoNew: getVideoNew, width: viewportSize.getWidth()}),
             navTemplate = _.template(navTmpl),
             navHTML = navTemplate({});
 
         $body = $("body");
         $("html").css("overflow-y", "scroll");
 
-        $(".element-interactive").append(mainHTML)
+        $(".element-interactive").html(mainHTML)
         $(".element-interactive .story-wrapper").before(navHTML);
 
         saveSelectors();
-
         initEvents();
     }
 
@@ -95,6 +99,10 @@ define([
         });
 
         dom.videos.intro = $("#full-intro video");
+
+        // dom.videos.intro.get(0).addEventListener("playing", function() {
+        //     console.log(new Date() - loadDate);
+        // });
 
         dom.anchors = {"chapter-1": {}, "chapter-2": {}, "chapter-3": {}, "chapter-4": {}, "chapter-5": {}};
 
@@ -158,7 +166,6 @@ define([
         dom.intro['right'] = $("#intro .right-container");
         dom.intro['div'] = $("#intro");
 
-        console.log(dom);
     }
 
     function whatBrowser() {
@@ -217,24 +224,24 @@ define([
             chp2RCWidth = $("#chapter-1 .right-container").width(),
             chp2TWidth = $("#chapter-1").find(".text").width();
 
-        if(!tablet && chp2Width - (chp2RCWidth + chp2TWidth) > 40) {
-            $("head").append("<style>.text { width: " + (chp2Width - chp2RCWidth - 60) + "px; }</style>");
-        }
+        setTimeout(function() {
+            if(!tablet && chp2Width - (chp2RCWidth + chp2TWidth) > 40) {
+                $("head").append("<style>.text { width: " + (chp2Width - chp2RCWidth - 60) + "px; }</style>");
+            }
+        }, 500);
 
         $window.resize(_.debounce(function(){
-            if(viewportSize.getWidth() !== windowWidth) {
-                chp2Width = $("#chapter-1").width();
-                chp2RCWidth = $("#chapter-1 .right-container").width();
-                chp2TWidth = $("#chapter-1 .text").width();
-                // console.log(viewportSize.getWidth(), windowWidth);
-                if((viewportSize.getWidth() > 980 && windowWidth < 980) || (viewportSize.getWidth() < 980 && windowWidth > 980) ) {
-                    location.reload();
-                }
-                windowWidth = viewportSize.getWidth();
-                console.log(chp2Width - (chp2RCWidth + chp2TWidth), chp2Width - (chp2RCWidth + chp2TWidth));
-                if(viewportSize.getWidth() > 980 && (chp2Width - (chp2RCWidth + chp2TWidth) > 40 || chp2Width - (chp2RCWidth + chp2TWidth) < 20)) {
-                    $("head").append("<style>.text { width: " + (chp2Width - chp2RCWidth - 60) + "px; }</style>");
-                }
+            chp2Width = $("#chapter-1").width();
+            chp2RCWidth = $("#chapter-1 .right-container").width();
+            chp2TWidth = $("#chapter-1 .text").width();
+            if((viewportSize.getWidth() > 980 && windowWidth < 980) || (viewportSize.getWidth() < 980 && windowWidth > 980) ) {
+                location.reload();
+            }
+
+            windowWidth = viewportSize.getWidth();
+
+            if(viewportSize.getWidth() > 980 && (chp2Width - (chp2RCWidth + chp2TWidth) > 40 || chp2Width - (chp2RCWidth + chp2TWidth) < 20)) {
+                $("head").append("<style>.text { width: " + (chp2Width - chp2RCWidth - 60) + "px; }</style>");
             }
         }, 500));
 
@@ -260,7 +267,10 @@ define([
         setAudioLevels();
 
         if((mobile || tablet) || viewportSize.getWidth() < 980) {
-            anchorReplace();
+            dom.videos.intro.get(0).play();
+            $(window).scroll( _.debounce(function() {
+                mobilePlay() 
+            }, 500));
         }
 
         if(mobile || tablet || viewportSize.getWidth() < 980) {
@@ -281,29 +291,18 @@ define([
         }
 
         $("#show-credits").click(function() {
-            $(".column").addClass("credits-visible");
-            $(".int-bottom-logo").css("opacity", "0");
-            $("#show-credits").css("opacity", "0");
+            $(".column").toggleClass("credits-visible");
+
+            if($(".column").hasClass("credits-visible")) {
+                $(".int-bottom-logo").css("opacity", "0");
+                $("#show-credits").text("Hide credits");
+                $("#int-teaser").css("opacity", "0");
+            } else {
+                $(".int-bottom-logo").css("opacity", "1");
+                $("#show-credits").text("Show credits");
+                $("#int-teaser").css("opacity", "1");
+            }
         });
-
-        // dom.videos.chapters['chapter-1'].get(0).addEventListener('loadeddata', function() {
-        //     resizeVideos();
-        // }, false);
-
-        // dom.videos.chapters['chapter-1'].get(0).addEventListener('ended', function(evt) { closeIntro(); }, false);
-
-        // $(".intro .close").on("click", function() {
-        //     closeIntro();
-        //     $(".title-box").addClass("s-1");
-
-        //     setTimeout(function() {
-        //         $(".title-box").addClass("s-2");
-
-        //         setTimeout(function() {
-        //             $(".title-box").addClass("s-3");
-        //         }, 600);
-        //     }, 300);
-        // });
 
         $(".js-mute").on("click", function() {
             muteVideo();
@@ -318,15 +317,6 @@ define([
         videoControl(currentScrollY);
         anchorsAction(currentScrollY);
         // stickDivs(currentScrollY);
-    }
-
-    function anchorReplace() {
-        // _.each(dom.anchors, function(val, key) {
-        //     var $el = val;
-
-        //     $el.after("<div class='mobile-alt' style='background-image: url(\"" + getAltImage($el.data('mobile-alt')) + "\");'></img>");
-        //     $el.remove();
-        // });
     }
 
     function setAudioLevels() {
@@ -346,9 +336,11 @@ define([
     function stickDivs(scrollY) {
         _.each(dom.chapters, function(val, key) {
             var $div = val,
-                $divRC = $div.children(".right-container"),
+                $divRC = $.data(val, "RC") || $div.children(".right-container"),
                 divHeight = $div.height(),
                 divOffset = $div.offset().top;
+
+            $.data(val, "RC", $divRC);
 
             if(key !== "intro") {
                 if(divOffset + divHeight - stickyTop <= scrollY + $divRC.height()) {
@@ -377,9 +369,21 @@ define([
         });
 
         _.each(dom.videos.breaks, function($el, key) {
-            var $full = $el.closest(".full");
+            var $full,
+                $elVidWrapper;
+
+            if($.data($el, "full") || $.data($el, "videoWrapper")) {
+                $full = $.data($el, "full");
+                $elVidWrapper = $.data($el, "videoWrapper");
+            } else {
+                $full = $el.closest(".full")
+                $elVidWrapper = $el.parent(".video-wrapper");
+                $.data($el, "full", $full);
+                $.data($el, "videoWrapper", $elVidWrapper);
+            }
+
             if($full.offset().top <= $window.scrollTop() && key !== "head-6") {
-                $el.parent(".video-wrapper").css("position", "fixed");
+                $elVidWrapper.css("position", "fixed");
 
                 if($full.offset().top + $full.height() >= $window.scrollTop()) {
                     $full.addClass("js-fixed");
@@ -408,20 +412,10 @@ define([
                     $.scrollLock(true);
                 }
             } else {
-                $el.parent(".video-wrapper").css("position", "absolute");
+                $elVidWrapper.css("position", "absolute");
                 $full.removeClass("js-fixed");
             }
         });
-
-        // if(!pastIntro && window.scrollY > $("#intro").offset().top + 20) {
-        //     window.scrollTo(0, $("#intro").offset().top + 20);
-        //     $.scrollLock(true);
-        //     pastIntro = true;
-
-        //     setTimeout(function() {
-        //         $.scrollLock(false);
-        //     }, 1000);
-        // }
 
         if(window.scrollY > dom.intro['div'].offset().top) {
             dom.intro['right'].addClass("right-container--sticky");
@@ -436,18 +430,36 @@ define([
             dom.intro['right'].removeClass("right-container--bottom");
         }
 
-        if(window.scrollY > $("#graph1").offset().top - $window.height() + 500) {
-            console.log('alert');
+        if(window.scrollY > $("#graph1").offset().top - $window.height() + 300) {
             $("#graph1").removeClass("before-animate");
+        }
+    }
+
+    function mobilePlay() {
+        _.each(dom.videos.breaks, function(val, key) {
+            var $el = val;
+
+            if($el.offset().top < $window.scrollTop() + $window.height() && $el.offset().top + $el.height() > $window.scrollTop()) {
+                $el.get(0).play();
+            } else {
+                $el.get(0).pause();
+            }
+        });
+
+        if($window.scrollTop() < dom.videos.intro.height()) {
+            dom.videos.intro.get(0).play();
+        } else {
+            dom.videos.intro.get(0).pause();
         }
     }
 
     function videoControl(scrollY) {
         _.each(dom.videos.breaks, function(val, key) {
             var $el = val,
-                $elParent = $el.closest(".full");
+                $elParent = $.data(val, "full") || $el.closest(".full"),
+                elParentOffset = $elParent.offset().top;
 
-            if(($elParent.offset().top - $window.height() + 500 <= scrollY && $window.scrollTop() + 500 < $elParent.offset().top + $elParent.height())) {
+            if((elParentOffset - $window.height() + 500 <= scrollY && $window.scrollTop() + 500 < elParentOffset + $elParent.height())) {
                 // $el.parent().css("opacity", "1");
                 // $el.get(0).volume = 1;
                 if($el.get(0).paused) {
@@ -471,7 +483,7 @@ define([
 
         _.each(dom.videos.chapters, function(val, key) {
             var $el = val,
-                $elParent = $el.closest(".right-container");
+                $elParent = $.data(val, "full") || $el.closest(".right-container");
 
             if($elParent.hasClass("right-container--sticky") && !$elParent.hasClass("right-container--bottom")) {
                 if($el.get(0).paused) {
@@ -491,7 +503,7 @@ define([
             }
         });
 
-        if(dom.videos.intro.get(0) && scrollY > $window.height() && viewportSize.getWidth() > 980) {
+        if(dom.videos.intro.get(0) && scrollY > $window.height() && windowWidth > 980) {
             dom.videos.intro.get(0).pause();
             dom.videos.intro.remove();
             $("#full-intro .video-wrapper").css("background-image", "url('@@assetPath@@/imgs/intro.png')");
@@ -557,15 +569,15 @@ define([
                 if(currentAudio !== section) {
 
                     if(currentAudio !== "head-6") {
-                        // var toPause = currentAudio;
-                        // dom.audio[currentAudio].animate({volume: 0}, 3000, function () {
-                        //     dom.audio[toPause].get(0).pause();
-                        // });
+                        var toPause = currentAudio;
+                        dom.audio[currentAudio].animate({volume: 0}, 3000, function () {
+                            dom.audio[toPause].get(0).pause();
+                        });
                     }
 
                     if(section !== "head-6") {
-                        // dom.audio[section].get(0).play();
-                        // dom.audio[section].animate({volume: volumes.audio}, 3000);
+                        dom.audio[section].get(0).play();
+                        dom.audio[section].animate({volume: volumes.audio}, 3000);
                     }
 
                     currentAudio = section;
@@ -627,10 +639,16 @@ define([
 
 
     function changeVideo($anchor) {
-        var $chapter = $anchor.closest(".chapter"),
+        var $chapter = $.data($anchor, "chapter") || $anchor.closest(".chapter"),
+            $chapterRC = $.data($anchor, "chapterRC") || $chapter.find(".right-container"),
             name = $anchor.attr("name");
 
-        $chapter.find(".right-container").prepend(getVideoNew(name, "waiting", true, true));
+        if(!$.data($anchor, "chapter")) {
+            $.data($anchor, "chapter", $chapter);
+            $.data($anchor, "chapterRC", $chapterRC);
+        }
+
+        $chapterRC.prepend(getVideoNew(name, "waiting", true, true));
 
         var $videoWrapper = $chapter.find("#" + name);
 
@@ -666,18 +684,6 @@ define([
         return src;
     }
 
-    function getVideo(name, className, autoplay) {
-        var mutedTag = (mute) ? "muted" : "",
-            classTag =  (className) ? className : "",
-            posterTag = (videos[name].poster !== "") ? "poster='" + videos[name].poster + "'" : "",
-            autoplayTag = (autoplay) ? "autoplay" : "",
-            src = {};
-        src.mp4 = (videos[name].mp4) ? "<source src='" + videos[name].mp4 + "' type='video/mp4'>" : "";
-        src.webm = (videos[name].webm) ? "<source src='" + videos[name].webm + "' type='video/webm'>" : "";
-
-        return "<div class='video-wrapper " + classTag + "' style='background-image: url(\"" + videos[name].poster + "\");'><video preload='metadata' " + mutedTag + posterTag + " loop " + autoplayTag + ">" + src.mp4 + src.webm + "</video></div>";
-    }
-
     function getVideoNew(name, className, autoplay, loop) {
         var mutedTag = (mute) ? " muted " : "",
             classTag =  (className) ? className : "",
@@ -685,11 +691,141 @@ define([
             autoplayTag = (autoplay) ? "autoplay" : "",
             loopTag = (loop) ? " loop " : "",
             src = {}; 
-        src.mp4 = "<source src='http://multimedia.guardianapis.com/interactivevideos/video.php?file=" + name + "&format=video/mp4&maxbitrate=2048' type='video/mp4'>";
+        src.mp4 = "<source src='http://multimedia.guardianapis.com/interactivevideos/video.php?file=" + name + "&format=video/mp4&maxbitrate=" + bandwidth + "' type='video/mp4'>";
         // src.ogg = "<source src='http://multimedia.guardianapis.com/interactivevideos/video.php?file=" + name + "&format=video/ogg&maxbitrate=2048' type='video/ogg'>";
-        src.webm = "<source src='http://multimedia.guardianapis.com/interactivevideos/video.php?file=" + name + "&format=video/webm&maxbitrate=2048' type='video/webm'>";
+        src.webm = "<source src='http://multimedia.guardianapis.com/interactivevideos/video.php?file=" + name + "&format=video/webm&maxbitrate=" + bandwidth + "' type='video/webm'>";
         return "<div id='" + name +"' class='video-wrapper " + classTag + "' style='background-image: url(\"http://multimedia.guardianapis.com/interactivevideos/video.php?file=" + name + "&format=video/mp4&maxbitrate=1024&poster=1\");'><video preload='none' " + mutedTag + posterTag + loopTag + autoplayTag + " >" + src.mp4 + src.webm + "</video></div>";
     }
+
+    function testBandwidth(callback) {
+        var startTime = new Date().getTime();
+
+//      var checkFileSmall = 'http://cdn.theguardian.tv/';
+//      var fileSizeSmall = 384;
+        var checkFileSmall = 'http://cdn.theguardian.tv/interactive/speedtest/testfilesmall.dat';
+        var fileSizeSmall = 1024*8;
+        var checkFileLarge = 'http://cdn.theguardian.tv/interactive/speedtest/testfile.dat';
+        var fileSizeLarge = 102400*8;
+        var timeout = 2000;//just give up after 5 seconds
+//      checkFileSmall += "?bust=" + startTime;
+//      checkFileLarge += "?bust=" + startTime;
+        var err = null;
+
+        // setTimeout(function() {
+        //     console.log('bob');
+        // }, 500); 
+
+
+        var loadSecondsLarge = 0;
+        var loadSecondsSmall = 0;
+        var loadedLarge = false;
+        var loadedSmall = false;
+
+//      var oneLoaded = function(){
+//          if(loadedLarge && loadedSmall){
+//              bothLoaded();
+//          }
+//      };
+        var bothLoaded = function(){
+//          console.log('time to load '+(fileSizeSmall/1024)+'kb: ' + loadSecondsSmall);
+//          console.log('time to load '+(fileSizeLarge/1024)+'kb: ' + loadSecondsLarge);
+            var loadSecondsDiff = loadSecondsLarge - loadSecondsSmall;
+            loadSecondsDiff = Math.max(loadSecondsDiff, 0.01);
+            var fileSizeDiff = fileSizeLarge - fileSizeSmall;
+            var rate = fileSizeDiff/loadSecondsDiff;
+
+//          console.log('estimated bandwidth: ' + (rate/1024) + 'kbps');
+            console.log('estimated bandwidth: ' + (rate/1024) + 'kilobits/s');
+            console.log('estimated latency: ' + loadSecondsSmall);
+            console.log(new Date() - loadDate);
+
+            var ratekbps = Math.round(rate*0.75/1024);
+
+            ratekbps = Math.min(ratekbps, 10000);
+            ratekbps = Math.max(ratekbps, 100);
+            bandwidth = ratekbps;
+
+            if(callback){
+                var temp = callback;
+                callback = null;//prevent double callback
+                temp(err, rate);
+            }
+        };
+
+        timeFile(checkFileSmall, function(err, loadSeconds){
+            //make sure dnscache is happy
+            if(!err){
+                timeFile(checkFileSmall, function(err, loadSeconds){
+                if(!err){
+                    loadSecondsSmall = loadSeconds;
+                    loadedSmall = true;
+                    timeFile(checkFileLarge, function(err, loadSeconds){
+                        if(!err){
+                            loadSecondsLarge = loadSeconds;
+                            loadedLarge = true;
+                            bothLoaded();
+            //              oneLoaded();
+                        }
+                    });
+                }
+            });
+            }
+        });
+
+
+//      Settings.timeFile(checkFileLarge, function(err, loadSeconds){
+//          var rate = fileSize / loadSeconds;
+//          Settings.bandwidth = rate;
+//          if(callback){
+//              callback(err, rate);
+//              callback = null;//prevent double callback
+//          }
+//      });
+
+        setTimeout(function(){
+            if(callback){
+                console.log('running from timeout');
+                var temp = callback;
+                callback = null;
+                temp("timeout", bandwidth);
+            }
+        }, 1000);
+    };
+
+    function timeFile(url, callback) {
+        var startTime = new Date().getTime();
+        url += "?bust=" + startTime;
+        var err = null;
+        loadScript(url, function () {
+//          console.log('probably should just ignore Unexpected SyntaxError');
+            var endTime = new Date().getTime();
+            var loadTime = endTime - startTime;
+            var loadSeconds = loadTime * 0.001;
+            if(callback){
+                callback(err, loadSeconds);
+            }
+        });
+    };
+
+    function loadScript(url, callback) {
+        var script = document.createElement("script");
+        script.charset = "utf-8";
+        script.src = url;
+        var done = false;
+        script.onload = script.onreadystatechange = function () {
+            if (!done && (!this.readyState || this.readyState === "loaded" || this.readyState === "complete")) {
+                done = true;
+                if(callback){
+                    callback();
+                }
+                script.onload = script.onreadystatechange = null;
+                if (script.parentNode) {
+                    script.parentNode.removeChild(script);
+                }
+            }
+        };
+        document.body.appendChild(script);
+    };
 
     $.scrollLock = ( function scrollLockClosure() {
         'use strict';
@@ -746,7 +882,7 @@ define([
             var appliedLock = {};
 
             // Duplicate execution will break DOM statefulness
-            if( locked ) {
+            if( locked || bowser.safari) {
                 return;
             }
 
@@ -815,6 +951,7 @@ define([
             }
         };
     }() );
+
 
     return {
         init: init

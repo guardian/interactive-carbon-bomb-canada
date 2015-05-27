@@ -9,7 +9,7 @@ $gs-baseline: 12px;
 
 $egyptian: "Guardian Egyptian Web","Egyptian Display",Georgia, serif;
 $text-egyptian: "Guardian Text Egyptian Web","Egyptian Text",Georgia,serif;
-$sans: "Guardian Sans Web", "Guardian Agate Sans 1 Web",sans-serif;
+$sans: "Guardian Text Sans Web", "Guardian Agate Sans 1 Web",sans-serif;
 $text-sans: "Guardian Text Sans Web", "Guardian Agate Sans 1 Web",sans-serif;
 
 @import 'bower_components/pasteup-palette/src/_palette';
@@ -116,7 +116,7 @@ body {
 .text {
 	width: 100%;
 	font-size: 18px;
-	line-height: 32px;
+	line-height: 28px;
 	color: #333333;
 	overflow: hidden;
 	padding: 0 20px;
@@ -190,10 +190,12 @@ body {
 	}
 
 	a {
-		height: 1px;
-		border: 0;
-		display: block;
-		width: 100%;
+		color: #333333; 
+		text-decoration: underline;
+
+		&:hover {
+			text-decoration: none;
+		}
 	}
 
 	#intro & {
@@ -209,7 +211,6 @@ body {
 	img {
 		width: 100%;
 		margin-top: 48px;
-		max-width: 400px;
 		display: block;
 	}
 
@@ -233,7 +234,7 @@ body {
 		height: 0;
 		border: 0;
 		border-top: 2px solid #ff9b0b;
-		margin-top: 48px;
+		margin-top: 96px;
 	}
 }
 
@@ -272,13 +273,13 @@ body {
 }
 
 .pullquote {
-	padding: 6px 0px 36px 0px;
+	padding: 6px 0px 0px 0px;
 	font-family: "Guardian Egyptian Web", "Egyptian Display", Georgia, serif;
 	font-size: 28px;
 	color: #333;
 	line-height: 38px;
 	width: 100%;
-	margin-bottom: 48px !important;
+	margin-bottom: 24px !important;
 	font-weight: 500;
 	max-width: 500px;
 
@@ -558,20 +559,21 @@ body {
 		}
 	}
 	.title {
-		line-height: 105px;
-		font-size: 120px;
+		line-height: 90px;
+		font-size: 98px;
 		position: absolute;
-		top: 24px;
+		top: -16px;
 		font-weight: 300;
 	}
 	.subheading {
 		font-weight: 300;
 		padding-top: 0px;
-		font-size: 29px;
+		font-size: 22px;
 		line-height: 48px;
 		padding-left: 4px;
-		top: 240px;
+		top: 160px;
 		color: #ff9b0b;
+		font-weight: 600;
 		position: absolute;
 	}
 	.chapter-box {
@@ -614,13 +616,45 @@ body {
 
 #intro {
 	.text--content {
+		@include mq($until: tablet) {
+			max-width: 100%;
+		}
+
+		max-width: 280px;
+
 		@include mq(desktop) {
 			font-family: "Guardian Egyptian Web", "Egyptian Display", Georgia, serif;
 			font-size: 28px;
+			max-width: 480px;
 			line-height: 38px;
 			font-weight: 300;
 			padding-top: 60px;
+		}
+
+		@include mq(leftCol) {
+			max-width: 680px; 
+		}
+
+		@include mq(wide) {
 			max-width: 800px;
+		}
+	}
+
+	img {
+		height: 100%;
+		right: 0;
+		position: absolute;
+		max-height: 600px;
+		display: block;
+		padding: 24px;
+		padding-right: 40px;
+		top: 0;
+
+		@include mq($until: tablet) {
+			position: relative;
+			height: auto;
+			max-height: 1000px;
+			width: 100%;
 		}
 	}
 
@@ -647,7 +681,7 @@ body {
 	.intro-title {
 		font-size: 22px;
 		font-weight: 600;
-		color: #ffb90b;
+		color: #ff9b0b;
 		line-height: 32px;
 		font-family: "Guardian Egyptian Web", "Egyptian Display", Georgia, serif;
 		margin-bottom: 18px; 
@@ -1003,7 +1037,7 @@ img {
 .large-break-title {
 	font-size: 22px;
 	font-weight: 600;
-	color: #ffb90b;
+	color: #ff9b0b;
 	font-family: "Guardian Egyptian Web", "Egyptian Display", Georgia, serif;
 	opacity: 0;
 	-webkit-transition: opacity 0.3s ease-in;
@@ -1077,13 +1111,13 @@ img {
 }
 
 .chapter-real p:first-child:first-letter {
-	color: orange;
+	color: #ff9b0b;
 	font-family: "Guardian Egyptian Web";
-	font-size: 66px;
+	font-size: 92px;
 	font-weight: 300;
 	float: left;
-	padding-right: 11px;
-	margin-top: 19px;
+	padding-right: 15px;
+	margin-top: 32px;
 }
 
 #head-6 {
@@ -1092,7 +1126,7 @@ img {
 	}
 
 	.column {
-		height: 400px;
+		height: 454px;
 		position: absolute;
 		bottom: 0;
 		opacity: 0;
@@ -1126,8 +1160,8 @@ img {
 		max-width: 240px;
 
 		span {
-			color: #ffb90b;
-			font-weight: 600;
+			color: #ff9b0b;
+			font-weight: 500;
 			font-size: 18px;
 			display: block;
 			margin-bottom: -6px;
@@ -1143,6 +1177,11 @@ img {
 		right: 0;
 	}
 
+	#canon {
+		width: 66px;
+		margin-top: 4px;
+	}
+
 	#keepit {
 		position: absolute;
 		bottom: 24px;
@@ -1156,6 +1195,11 @@ img {
 			margin-right: 10px;
 		}
 	}
+
+	a {
+		color: #fff;
+		text-decoration: none;
+	}
 }
 
 #show-credits {
@@ -1163,7 +1207,7 @@ img {
 	color: #fff;
 	border-radius: 30px;
 	border: 1px solid #fff;
-	font-family: "Guardian Sans Web", "Guardian Agate Sans 1 Web", sans-serif;
+	font-family: "Guardian Text Sans Web", "Guardian Agate Sans 1 Web", sans-serif;
 	font-weight: 600;
 	width: auto;
 	display: inline-block;
@@ -1179,16 +1223,105 @@ img {
 	}
 }
 
+#int-teaser {
+	position: absolute;
+	left: 0;
+	display: block;
+	top: 33%;
+	color: #fff;
+	z-index: 1000;
+	width: 320px;
+	transition: opacity 0.3s ease-in;
+
+	&:hover {
+		.int-teaser-title {
+			border-bottom: 2px solid #fff;
+			padding-bottom: 0;
+		}
+	}
+
+	.int-series {
+		font-family: $sans;
+	}
+
+	hr {
+		margin: 0;
+		margin-bottom: 6px;
+		border: 0;
+		border-top: 1px solid rgba(255, 255, 255, 0.3);
+		height: 0;
+		display: block;
+		width: 60px;
+	}
+
+	text-decoration: none !important;
+
+	.int-teaser-title {
+		font-family: $egyptian;
+		font-size: 40px;
+		font-weight: 300;
+		line-height: 42px;
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
+
+	.int-location {
+		font-family: $egyptian;
+		color: #ff9b0b;
+		font-weight: 500;
+		font-size: 18px;
+	}
+
+	.int-right-arrow {
+		border: 1px solid #fff;
+		padding: 10px;
+		border-radius: 40px;
+	}
+}
+
+.int-campaign-words {
+	position: absolute;
+	top: 32%;
+	width: 40%;
+
+	a {
+		 border-bottom: 1px solid white;
+
+  		&:hover {
+  			opacity: 0.8;
+  		}
+	}
+
+	.int-campaign-title {
+		font-size: 36px;
+		line-height: 38px;
+		font-weight: 300;
+		font-family: $egyptian;
+		color: #ffffff;
+		line-height: 40px;
+  		padding-bottom: 12px;
+	}
+
+	.int-campaign-sentences {
+		font-size: 18px;
+		opacity: 0.9;
+		font-weight: 400;
+		font-family: $text-egyptian;
+		color: #ffffff;
+		padding-top: 12px;
+	}
+}
+
 .change-location {
 	height: 32px;
-	border: 1px solid #ffbb00;
+	border: 1px solid #ff9b0b;
 	border-radius: 60px;
 	display: inline-block;
 	float: right;
 	font-family: $sans;
 	font-size: 14px;
 	font-weight: 600;
-	color: #ffbb00;
+	color: #ff9b0b;
 	padding-left: 10px;
 	padding-top: 5px;
 	padding-right: 10px;
@@ -1200,7 +1333,7 @@ img {
 		float: right;
 		margin-left: 8px;
 		margin-top: 1px;
-		fill: #ffbb00;
+		fill: #ff9b0b;
 	}
 
 	&:hover {
@@ -1227,6 +1360,7 @@ img {
 	width: 300px;
 	padding: 0px 0px;
 	display: none;
+	transform: translateZ(0);
 
 	.chapter & {
 		border-top: 1px solid #ededed;
@@ -1238,7 +1372,7 @@ img {
 
 	&:after {
 		bottom: 100%;
-		right: 29px;
+		right: 40px;
 		border: solid transparent;
 		content: " ";
 		height: 0;
@@ -1296,7 +1430,7 @@ img {
 		}
 
 		.country {
-			color: #ffbb00;
+			color: #ff9b0b;
 			font-size: 14px;
 			font-family: $sans;
 			line-height: 12px;
@@ -1349,7 +1483,7 @@ img {
 }
 
 .intro-text--country {
-	color: #ffbb00;
+	color: #ff9b0b;
 	font-family: $egyptian;
 	font-size: 18px;
 	line-height: 24px;
@@ -1365,7 +1499,7 @@ img {
 	width: 100%;
 	height: 524px;
 	position: relative;
-	margin-bottom: 36px;
+	margin-bottom: 60px;
 }
 
 .int-bar-chart--top {
@@ -1376,6 +1510,13 @@ img {
 	left: 0;
 }
 
+.int-bar-title {
+	font-size: 18px;
+	position: absolute;
+	left: 0;
+	font-weight: 700;
+	font-family: $egyptian;
+}
 .int-bar-chart--bottom {
 	height: 250px;
 	width: 100%;
@@ -1384,7 +1525,7 @@ img {
 	left: 0; 
 
 	.int-bar {
-		background-color: #999 !important;
+		background-color: #dcdcdc !important;
 		bottom: auto;
 		top: 0;
 	}
@@ -1405,17 +1546,17 @@ img {
 	position: absolute;
 	left: 0;
 	background-color: #ffffff;
-	padding-right: 5px; 
+	padding-right: 5px;
 }
 
 .int-bar {
 	border-right: 1px solid white;
-	background-color: #ffbb00;
+	background-color: #ff9b0b;
 	display: block;
 	float: left;
 	position: absolute;
 	bottom: 0;
-	transition: height 1s ease-in;
+	transition: height 1s ease-in-out;
 
 	.before-animate & {
 		height: 0 !important;
