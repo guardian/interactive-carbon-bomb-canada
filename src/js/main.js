@@ -181,6 +181,7 @@ define([
     function initEvents() {
         preLoad();
 
+        console.log(bowser);
         if(!mobile && !tablet && viewportSize.getWidth() > 980) {
 
             $(window).scroll(_.debounce(update, 500));
@@ -228,20 +229,26 @@ define([
             if(!tablet && chp2Width - (chp2RCWidth + chp2TWidth) > 40) {
                 $("head").append("<style>.text { width: " + (chp2Width - chp2RCWidth - 60) + "px; }</style>");
             }
+
+            if (bowser.msie) {
+                $("body").addClass("int-exp");
+            }
         }, 500);
 
         $window.resize(_.debounce(function(){
-            chp2Width = $("#chapter-1").width();
-            chp2RCWidth = $("#chapter-1 .right-container").width();
-            chp2TWidth = $("#chapter-1 .text").width();
-            if((viewportSize.getWidth() > 980 && windowWidth < 980) || (viewportSize.getWidth() < 980 && windowWidth > 980) ) {
-                location.reload();
-            }
+            if(!tablet && !mobile) {
+                chp2Width = $("#chapter-1").width();
+                chp2RCWidth = $("#chapter-1 .right-container").width();
+                chp2TWidth = $("#chapter-1 .text").width();
+                if((viewportSize.getWidth() > 980 && windowWidth < 980) || (viewportSize.getWidth() < 980 && windowWidth > 980) ) {
+                    location.reload();
+                }
 
-            windowWidth = viewportSize.getWidth();
+                windowWidth = viewportSize.getWidth();
 
-            if(viewportSize.getWidth() > 980 && (chp2Width - (chp2RCWidth + chp2TWidth) > 40 || chp2Width - (chp2RCWidth + chp2TWidth) < 20)) {
-                $("head").append("<style>.text { width: " + (chp2Width - chp2RCWidth - 60) + "px; }</style>");
+                if(viewportSize.getWidth() > 980 && (chp2Width - (chp2RCWidth + chp2TWidth) > 40 || chp2Width - (chp2RCWidth + chp2TWidth) < 20)) {
+                    $("head").append("<style>.text { width: " + (chp2Width - chp2RCWidth - 60) + "px; }</style>");
+                }
             }
         }, 500));
 
@@ -288,6 +295,10 @@ define([
 
         if(tablet && viewportSize.getWidth() > 980) {
             $("head").append("<style>.text { width: 100%; max-width: 620px; } .right-container { display: none; } .mute { display: none; }</style>");
+        } else if(viewportSize.getWidth() < 980 || tablet) {
+            // specific to CARBON BOMB CANADA
+            $("#chapter-1 img").first().remove();
+            $("#chapter-1 .mobile-image-caption").first().remove();
         }
 
         $("#show-credits").click(function() {

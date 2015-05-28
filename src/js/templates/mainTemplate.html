@@ -15,7 +15,7 @@
 				<img src="http://interactive.guim.co.uk/2015/03/climate-change-campaign/assets-1429182577216/imgs/logo_white.png" class="int-top-logo">
 				<div class="social-bar">
 					<div class="change-location">episodes</div>
-					<a class="js-mute faux-link"><i class="mute"></i></a><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent(data.sharing[0]['url']) + '/sfb' %>" class="social-icon-int facebook"><i></i></a><a href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['intro']) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter" target="_blank"><i></i></a>
+					<a class="js-mute faux-link"><i class="mute"></i></a><a data-link-name="social facebook" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<%= encodeURIComponent(data.sharing[0]['url']) + '/sfb' %>" class="social-icon-int facebook"><i></i></a><a data-link-name="social twitter" href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['tweet']) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter" target="_blank"><i></i></a>
 				</div>
 				<div class="title-box">
 					<div class="title">
@@ -71,7 +71,7 @@
 		<div class="full" id="head-<%= i %>" data-mobile-alt="bob">
 			<%= getVideoNew(data['break' + i][0].video, "top-layer", false, false) %>
 			<div class="int-main">
-				<div class="social-bar"><div class="change-location">episodes</div><a target="_blank" class="js-mute faux-link"><i class="mute"></i></a><a href="#" class="social-icon-int facebook"><i></i></a><a target="_blank" href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['chapter' + i]) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter"><i></i></a></div>
+				<div class="social-bar"><div class="change-location">episodes</div><a target="_blank" class="js-mute faux-link"><i class="mute"></i></a><a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=<%= data.sharing[0]['url'] + '/sfb' %>" class="social-icon-int facebook" data-link-name="social facebook"><i></i></a><a target="_blank" href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['tweet']) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter" data-link-name="social twitter"><i></i></a></div>
 				<div class="large-break-container">
 					<div class="large-break-title"><%= data['break' + i][0].description %></div>
 					<div class="large-break"><%= data['break' + i][0].title %></div>
@@ -82,7 +82,7 @@
 		</div>
 		<div class="int-container">
 			<div class="int-main chapter chapter-real" id="chapter-<%= i %>">
-				<div class="social-bar"><div class="change-location">episodes</div><a target="_blank" class="js-mute faux-link"><i class="mute"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u=<%= data.sharing[0]['url'] + '/sfb' %>" class="social-icon-int facebook"><i></i></a><a target="_blank" href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['chapter' + i]) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter"><i></i></a></div>
+				<div class="social-bar"><div class="change-location">episodes</div><a target="_blank" class="js-mute faux-link"><i class="mute"></i></a><a data-link-name="social facebook" href="https://www.facebook.com/sharer/sharer.php?u=<%= data.sharing[0]['url'] + '/sfb' %>" class="social-icon-int facebook"><i></i></a><a target="_blank" href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['tweet']) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter" data-link-name="social twitter"><i></i></a></div>
 				<div class="right-container">
 					<%= getVideoNew(data['chapter' + i][0].anchor, "top-layer", false, true) %>
 				</div>
@@ -109,7 +109,7 @@
 							<% } %>
 
 							<% if(row.type === "graph" && row.content === "graph1") { %> 
-								<div class="int-bar-chart <% if(width > 940) { %> before-animate<% } %>" id="graph1">
+								<div class="int-bar-chart <% if(width > 1040) { %> before-animate<% } %>" id="graph1">
 									<div class="int-bar-chart--top">
 										<div class="int-line" style="top: 83.3px;"></div>
 										<div class="int-line" style="top: 166.6px;"></div>
@@ -161,20 +161,20 @@
 
 		<div class="int-main">
 			<a href="http://theguardian.com"><img src="@@assetPath@@/imgs/bottomlogo.png" class="int-bottom-logo"></a>
-<!-- 			<a href="http://www.theguardian.com/environment/ng-interactive/2015/may/15/carbon-bomb-australia-the-new-coal-frontier" id="int-teaser">
+			<a href="http://www.theguardian.com/environment/ng-interactive/2015/may/15/carbon-bomb-australia-the-new-coal-frontier" id="int-teaser">
 				<hr/>
 				<div class="int-series">Other stories in this series</div>
 				<span class="int-teaser-title">The new coal frontier</span>
 				<div class="int-location">Galilee Basin, Australia</div>
-			</a> -->
+			</a>
 
-			<div class="int-campaign-words">
+<!-- 			<div class="int-campaign-words">
 				<div class="int-campaign-title">Take action:<br>What you can do to help</div>
 				<div class="int-campaign-sentences">The Guardian has launched a Keep it in the Ground campaign. <a href="http://www.theguardian.com/environment/ng-interactive/2015/mar/16/keep-it-in-the-ground-guardian-climate-change-campaign?INTCMP=keepinground-petition-cb" target="_blank">Sign our petition</a></div>
 				<div class="int-campaign-sentences">Canadians, 350' is organising a <a href="http://350.org/july/" target="_blank">day of action</a></div>
-			</div>
+			</div> -->
 			<div id="show-credits">View credits</div>
-			<div class="social-bar"><div class="change-location">episodes</div><a target="_blank" class="js-mute faux-link"><i class="mute"></i></a><a href="https://www.facebook.com/sharer/sharer.php?u=<%= data.sharing[0]['url'] + '/sfb' %>" class="social-icon-int facebook"><i></i></a><a target="_blank" href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['outro']) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter"><i></i></a></div>
+			<div class="social-bar"><div class="change-location">episodes</div><a target="_blank" class="js-mute faux-link"><i class="mute"></i></a><a data-link-name="social facebook" href="https://www.facebook.com/sharer/sharer.php?u=<%= data.sharing[0]['url'] + '/sfb' %>" class="social-icon-int facebook"><i></i></a><a target="_blank" href="https://twitter.com/intent/tweet?text=<%= encodeURIComponent(data.sharing[0]['tweet']) %>&url=<%= data.sharing[0]['url'] %>/stw" class="social-icon-int twitter"><i></i></a></div>
 			<div class="column column-2">
 				<p><span class="list-title">Produced and directed by</span><span class="list-name">Lindsay Poulton</span></p>
 				<p><span class="list-title">Written by</span><span class="list-name">Suzanne Goldenberg</span></p>
@@ -198,7 +198,7 @@
 
 <div class="location-dropdown" id="int-dropdown">
 	<% data.series.map(function(row) { %>
-		<a <% if(row.live !== "FALSE") { %> href="<%= row.link %>"<% } %> class="item <% if(row.live === "FALSE") { %> inactive<% } %>">
+		<a data-link-name="carbon-bomb-nav <%= row.country %>" <% if(row.live !== "FALSE") { %> href="<%= row.link %>?INTCMP=keepinground-cb2"<% } %> class="item <% if(row.live === "FALSE") { %> inactive<% } %>">
 			<img src="<%= row.image %>" class="dropdown-image">
 			<div class="country"><%= row.country %></div>
 			<div class="item-title"><%= row.title %></div>
